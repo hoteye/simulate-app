@@ -1,0 +1,35 @@
+name: AgentHub Validation
+run-name: AgentHub Validation [${{ inputs.trace_id || 'no-trace' }}]
+
+on:
+  workflow_dispatch:
+    inputs:
+      trace_id:
+        description: AgentHub local trace id
+        required: false
+        type: string
+      correlation_id:
+        description: AgentHub local correlation id
+        required: false
+        type: string
+      note:
+        description: Validation note
+        required: false
+        type: string
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Emit validation context
+        run: |
+          echo "trace_id=${{ inputs.trace_id }}"
+          echo "correlation_id=${{ inputs.correlation_id }}"
+          echo "note=${{ inputs.note }}"
+          {
+            echo "# AgentHub Validation"
+            echo "- trace_id: ${{ inputs.trace_id }}"
+            echo "- correlation_id: ${{ inputs.correlation_id }}"
+            echo "- note: ${{ inputs.note }}"
+            echo "- run_id: ${{ github.run_id }}"
+          } >> "$GITHUB_STEP_SUMMARY"
